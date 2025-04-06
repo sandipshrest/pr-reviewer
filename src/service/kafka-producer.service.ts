@@ -8,11 +8,8 @@ export class KafkaProducerService {
     @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
   ) {}
 
-  async sendMessage() {
-    const message = {
-      value: 'This is a test message from Kafka producer',
-    };
+  async sendMessage(topic: string, message: any) {
     // Send a message to 'my-topic' Kafka topic
-    await this.kafkaClient.emit('my-topic', message);
+    await this.kafkaClient.emit(topic, message);
   }
 }

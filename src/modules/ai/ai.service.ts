@@ -1,18 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { KafkaConsumerService } from '../../service/kafka-consumer.service';
 
 @Injectable()
 export class AiService {
   private readonly logger = new Logger(AiService.name);
+  constructor(private readonly kafkaConsumerService: KafkaConsumerService) {}
 
-  reviewPr(event: string, payload: any) {
-    this.logger.log(`Received event: ${event}`);
-    if (event === 'pull_request') {
-      this.logger.log('payload: ', payload);
-      const { action, pull_request } = payload;
-      console.log(`Action: ${action}`);
-      this.logger.log(`PR ${action}: ${pull_request?.title}`);
-      // Add logic for reviewing PR or sending a comment here
-    }
+  async reviewPr() {
+    const data = await this.kafkaConsumerService.getPrData();
+    this.logger.log(`Received PR data from kafka: ${JSON.stringify(data)}`);
 
     return { received: true };
   }

@@ -1,17 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GithubWebhookDto } from './dto/github-webhook.dto';
+import { KafkaProducerService } from '../../service/kafka-producer.service';
 
 @Injectable()
 export class WebhookService {
   private readonly logger = new Logger(WebhookService.name);
 
-  processGithubEvent(event: string, payload: GithubWebhookDto) {
-    this.logger.log(`Received event: ${event}`);
+  constructor(private readonly kafkaProducerService: KafkaProducerService) {}
+
+  async processGithubEvent(event: string, payload: GithubWebhookDto) {
     if (event === 'pull_request') {
-      this.logger.log("payload: ", payload);
       const { action, pull_request } = payload;
-      console.log(`Action: ${action}`);
-      this.logger.log(`PR ${action}: ${pull_request?.title}`);
+      try {
+        await this.kafkaProducerService.sendMessage('pr_events', {
+          action,
+        });
+        this.logger.log(`Successfully sent PR event to Kafka`);
+      } catch (err) {
+        this.logger.error(`Error sending PR event to Kafka: ${err.message}`);
+      }
       // Add logic for reviewing PR or sending a comment here
     }
 
