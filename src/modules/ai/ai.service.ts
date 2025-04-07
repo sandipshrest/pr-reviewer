@@ -7,6 +7,7 @@ export class AiService {
   constructor(private readonly kafkaConsumerService: KafkaConsumerService) {}
 
   async reviewPr() {
+    this.logger.log('Starting PR review process...');
     const data = await this.kafkaConsumerService.getPrData();
     this.logger.log(`Received PR data from kafka: ${JSON.stringify(data)}`);
 

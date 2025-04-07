@@ -12,6 +12,7 @@ export class WebhookService {
     if (event === 'pull_request') {
       const { action, pull_request } = payload;
       try {
+        this.logger.log(`Received PR event: ${action}`);
         await this.kafkaProducerService.sendMessage('pr_events', {
           action,
         });
