@@ -10,6 +10,6 @@ export class KafkaProducerService {
 
   async sendMessage(topic: string, message: any) {
     // Send a message to 'my-topic' Kafka topic
-    await this.kafkaClient.emit(topic, message);
+    this.kafkaClient.emit(topic, message);
   }
 }
