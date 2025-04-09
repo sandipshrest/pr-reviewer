@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GithubWebhookDto } from './dto/github-webhook.dto';
-import { KafkaProducerService } from '../../service/kafka-producer.service';
+import { KafkaProducerService } from '../kafka/kafka-producer.service';
 
 @Injectable()
 export class WebhookService {

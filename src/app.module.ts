@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WebhookModule } from './modules/webhook/webhook.module';
-import { KafkaModule } from './service/kafka.module';
+import { KafkaModule } from './modules/kafka/kafka.module';
 
 ConfigModule.forRoot();
 

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { WebhookController } from './webhook.controller';
 import { WebhookService } from './webhook.service';
-import { KafkaModule } from '../../service/kafka.module';
+import { KafkaModule } from '../kafka/kafka.module';
 
 @Module({
   imports: [KafkaModule],
