@@ -13,12 +13,15 @@ async function bootstrap() {
       },
       consumer: {
         groupId: 'my-kafka-consumer', // Choose a unique consumer group ID
+        // allowAutoTopicCreation: true,
+        // sessionTimeout: 30000,
+        // heartbeatInterval: 3000,
       },
     },
   });
 
   await app.startAllMicroservices(); // Start Kafka microservice
-  await app.listen(process.env.PORT ?? 3000, () => {
+  await app.listen(process.env.PORT ?? 8000, () => {
     console.log(`Server is running on ${process.env.PORT}`);
   });
 }

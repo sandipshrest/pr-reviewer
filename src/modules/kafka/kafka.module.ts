@@ -3,7 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { KafkaService } from './kafka.service';
 import { AiModule } from '../ai/ai.module';
 import { GithubModule } from '../github/github.module';
-import { KafkaConsumerService } from './kafka-consumer.service';
+import { KafkaConsumerController } from './kafka-consumer.controller';
 import { KafkaProducerService } from './kafka-producer.service';
 
 @Module({
@@ -26,7 +26,8 @@ import { KafkaProducerService } from './kafka-producer.service';
     AiModule,
     GithubModule,
   ],
-  providers: [KafkaService, KafkaConsumerService, KafkaProducerService],
+  controllers: [KafkaConsumerController], // Register KafkaConsumerController
+  providers: [KafkaService, KafkaProducerService],
   exports: [KafkaService], // Ensure services are exported
 })
 export class KafkaModule {}

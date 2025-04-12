@@ -2,6 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { KafkaProducerService } from './kafka-producer.service';
 import { GithubService } from '../github/github.service';
 import { AiService } from '../ai/ai.service';
+export interface PrEvent {
+  key: string;
+  value: {
+    owner: string;
+    repo: string;
+    number: number;
+  };
+}
 
 @Injectable()
 export class KafkaService {
@@ -15,10 +23,13 @@ export class KafkaService {
   async addPrToQueue(owner: string, repo: string, number: number) {
     this.logger.log(`Adding PR to queue: ${owner}/${repo}#${number}`);
     try {
-      await this.kafkaProducerService.sendMessage('pr_events', {
-        owner,
-        repo,
-        number,
+      await this.kafkaProducerService.sendMessage<PrEvent>('pr_events', {
+        key: `${owner}/${repo}#${number}`,
+        value: {
+          owner,
+          repo,
+          number,
+        },
       });
       this.logger.log(`Successfully added PR to queue`);
     } catch (err) {
@@ -27,6 +38,7 @@ export class KafkaService {
   }
 
   async processPr(owner: string, repo: string, number: number) {
+    this.logger.log(`Processing PR: ${owner}/${repo}#${number}`);
     const diff = await this.githubService.fetchPRDiff(owner, repo, number);
 
     const aiFeedback = await this.aiService.reviewPr(diff);
