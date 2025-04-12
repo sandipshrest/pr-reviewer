@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { KafkaProducerService } from './kafka-producer.service';
 import { GithubService } from '../github/github.service';
 import { AiService } from '../ai/ai.service';
+import { SlackService } from '../slack/slack.service';
 export interface PrEvent {
   key: string;
   value: {
@@ -18,6 +19,7 @@ export class KafkaService {
     private readonly kafkaProducerService: KafkaProducerService,
     private readonly githubService: GithubService,
     private readonly aiService: AiService,
+    private readonly slackService: SlackService, // Injecting the SlackService to send messages to Slack
   ) {}
 
   async addPrToQueue(owner: string, repo: string, number: number) {
@@ -44,6 +46,12 @@ export class KafkaService {
     const aiFeedback = await this.aiService.reviewPr(diff);
 
     await this.githubService.commentOnPR(owner, repo, number, aiFeedback);
+
+    // Post to Slack
+    await this.slackService.sendMessage(
+      '#pr-reviews',
+      `🤖 *AI Review posted on GitHub PR #${number}*`,
+    );
     this.logger.log(`Successfully commented on PR with AI feedback`);
   }
 }

@@ -5,6 +5,7 @@ import { AiModule } from '../ai/ai.module';
 import { GithubModule } from '../github/github.module';
 import { KafkaConsumerController } from './kafka-consumer.controller';
 import { KafkaProducerService } from './kafka-producer.service';
+import { SlackModule } from '../slack/slack.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { KafkaProducerService } from './kafka-producer.service';
     ]),
     AiModule,
     GithubModule,
+    SlackModule,
   ],
   controllers: [KafkaConsumerController], // Register KafkaConsumerController
   providers: [KafkaService, KafkaProducerService],
